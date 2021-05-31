@@ -20,8 +20,8 @@ function toScreenLocation(
   { x, y }: Point,
 ): Point {
   return {
-    x: x + width / 2,
-    y: y + height / 2,
+    x: width / 2 + x,
+    y: height / 2 - y,
   }
 }
 
