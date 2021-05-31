@@ -8,6 +8,7 @@ interface Point {
 
 interface Customer {
   location: Point
+  isServiced: Boolean
 }
 
 interface Tower {
@@ -41,6 +42,10 @@ function contains(envelope: Envelope, location: Point) {
   )
 }
 
+function magnitude(p1: Point, p2: Point) {
+  return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
+}
+
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { width, height } = useViewport()
@@ -58,6 +63,7 @@ function App() {
               x: Math.sin(angle) * magnitude,
               y: Math.cos(angle) * magnitude,
             },
+            isServiced: false,
           }
         }),
     )
@@ -81,6 +87,17 @@ function App() {
     )
   }, [])
 
+  useEffect(() => {
+    setCustomers((customers) =>
+      customers.map((customer) => ({
+        ...customer,
+        isServiced: towers.some(
+          (tower) => magnitude(tower.location, customer.location) <= 64,
+        ),
+      })),
+    )
+  }, [customers, towers])
+
   useLayoutEffect(() => {
     if (canvasRef.current !== null) {
       const context = (canvasRef.current as HTMLCanvasElement).getContext(
@@ -89,7 +106,6 @@ function App() {
       context.fillStyle = 'black'
       context.fillRect(0, 0, width, height)
 
-      context.fillStyle = 'gray'
       customers
         .map((customer) => ({
           ...customer,
@@ -101,7 +117,8 @@ function App() {
             location,
           ),
         )
-        .forEach(({ location }) => {
+        .forEach(({ location, isServiced }) => {
+          context.fillStyle = isServiced ? 'green' : 'gray'
           context.beginPath()
           context.ellipse(location.x, location.y, 4, 4, 0, 0, Math.PI * 2)
           context.fill()
