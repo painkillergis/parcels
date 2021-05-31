@@ -46,6 +46,8 @@ function App() {
     )
   }, [])
 
+  const [cash, setCash] = useState(1000)
+
   useLayoutEffect(() => {
     if (canvasRef.current !== null) {
       const context = (canvasRef.current as HTMLCanvasElement).getContext(
@@ -81,12 +83,33 @@ function App() {
   }, [canvasRef, width, height, customers, towers])
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '100%', height: '100%', display: 'block' }}
-      width={width}
-      height={height}
-    />
+    <>
+      <div style={{ padding: '1em' }}>
+        <span
+          style={{
+            backgroundColor: '#222',
+            color: 'white',
+            padding: '1em',
+            borderRadius: '0.25em',
+          }}
+        >
+          Cash: {cash}
+        </span>
+      </div>
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'block',
+          position: 'fixed',
+          top: 0,
+          zIndex: -1000,
+        }}
+        width={width}
+        height={height}
+      />
+    </>
   )
 }
 
