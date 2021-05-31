@@ -2,6 +2,7 @@ class GameEngine {
   canvas?: HTMLCanvasElement
   customers: Array<Customer> = []
   towers: Array<Tower> = []
+  center: Vector2 = { x: 0, y: 0 }
 
   constructor() {
     this.towers = Array(1)
@@ -53,6 +54,7 @@ class GameEngine {
         x: width,
         y: height,
       },
+      center: this.center,
     }
 
     this.canvas!.width = width
@@ -99,21 +101,30 @@ class GameEngine {
         context.stroke()
       })
   }
+
+  pan(offset: Vector2) {
+    this.center = {
+      x: this.center.x - offset.x,
+      y: this.center.y - offset.y,
+    }
+    this.render()
+  }
 }
 
-interface Vector2 {
+export interface Vector2 {
   x: number
   y: number
 }
 
 interface Viewport {
   size: Vector2
+  center: Vector2
 }
 
 function toScreenLocation(viewport: Viewport, location: Vector2): Vector2 {
   return {
-    x: viewport.size.x / 2 + location.x,
-    y: viewport.size.y / 2 - location.y,
+    x: viewport.size.x / 2 + location.x - viewport.center.x,
+    y: viewport.size.y / 2 - location.y - viewport.center.y,
   }
 }
 
