@@ -4,7 +4,7 @@ class GameEngine {
     center: { x: 0, y: 0 },
     size: { x: window.innerWidth, y: window.innerHeight },
   }
-  hasUpdated: Boolean = false
+  hasUpdated: Boolean = true
   interval: NodeJS.Timeout
 
   customers: Array<Customer> = []
@@ -45,14 +45,19 @@ class GameEngine {
       }))
 
     this.interval = setInterval(() => {
-      if (this.hasUpdated) {
+      if (this.canvas && this.hasUpdated) {
+        this.hasUpdated = false
         this.render()
       }
     }, 1 / 30)
+
+    this.resize = this.resize.bind(this)
+    window.addEventListener('resize', this.resize)
   }
 
   stop() {
     clearInterval(this.interval)
+    window.removeEventListener('resize', this.resize)
   }
 
   render() {
@@ -105,7 +110,6 @@ class GameEngine {
 
   setCanvas(canvas: HTMLCanvasElement) {
     this.canvas = canvas
-    this.hasUpdated = true
   }
 
   resize() {
