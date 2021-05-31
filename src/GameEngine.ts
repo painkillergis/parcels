@@ -94,7 +94,7 @@ class GameEngine {
   }
 }
 
-interface Point {
+interface Vector2 {
   x: number
   y: number
 }
@@ -102,8 +102,8 @@ interface Point {
 function toScreenLocation(
   width: number,
   height: number,
-  { x, y }: Point,
-): Point {
+  { x, y }: Vector2,
+): Vector2 {
   return {
     x: width / 2 + x,
     y: height / 2 - y,
@@ -111,12 +111,12 @@ function toScreenLocation(
 }
 
 interface Customer {
-  location: Point
+  location: Vector2
   isServiced: Boolean
 }
 
 interface Tower {
-  location: Point
+  location: Vector2
 }
 
 interface Envelope {
@@ -126,7 +126,7 @@ interface Envelope {
   bottom: number
 }
 
-function contains(envelope: Envelope, location: Point) {
+function contains(envelope: Envelope, location: Vector2) {
   return (
     location.x >= envelope.left &&
     location.x <= envelope.right &&
@@ -135,7 +135,7 @@ function contains(envelope: Envelope, location: Point) {
   )
 }
 
-function magnitude(p1: Point, p2: Point) {
+function magnitude(p1: Vector2, p2: Vector2) {
   return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
 }
 
