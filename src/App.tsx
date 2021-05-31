@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import GameEngine, { Vector2 } from './GameEngine'
+import useCanvasEffect from './hooks/useCanvasEffect'
 
 const gameEngine = new GameEngine()
 
@@ -8,49 +9,40 @@ function App() {
   const panning = useRef<Boolean>(false)
   const lastMouseLocation = useRef<Vector2>()
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      gameEngine.setCanvas(canvasRef.current)
-      return () => gameEngine.stop()
+  useCanvasEffect((canvas) => {
+    gameEngine.setCanvas(canvas)
+    return () => gameEngine.stop()
+  }, canvasRef)
+
+  useCanvasEffect((canvas) => {
+    const startPanning = () => (panning.current = true)
+    const finishPanning = () => (panning.current = false)
+
+    canvas.addEventListener('mousedown', startPanning)
+    canvas.addEventListener('mouseup', finishPanning)
+    canvas.addEventListener('mouseleave', finishPanning)
+
+    return () => {
+      canvas.removeEventListener('mousedown', startPanning)
+      canvas.removeEventListener('mouseup', finishPanning)
+      canvas.removeEventListener('mouseleave', finishPanning)
     }
-  }, [canvasRef])
+  }, canvasRef)
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current
-
-      const startPanning = () => (panning.current = true)
-      const finishPanning = () => (panning.current = false)
-
-      canvas.addEventListener('mousedown', startPanning)
-      canvas.addEventListener('mouseup', finishPanning)
-      canvas.addEventListener('mouseleave', finishPanning)
-
-      return () => {
-        canvas.removeEventListener('mousedown', startPanning)
-        canvas.removeEventListener('mouseup', finishPanning)
-        canvas.removeEventListener('mouseleave', finishPanning)
+  useCanvasEffect((canvas) => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (panning.current && lastMouseLocation.current) {
+        gameEngine.pan({
+          x: e.pageX - lastMouseLocation.current.x,
+          y: e.pageY - lastMouseLocation.current.y,
+        })
       }
+      lastMouseLocation.current = { x: e.pageX, y: e.pageY }
     }
-  }, [canvasRef])
+    canvas.addEventListener('mousemove', onMouseMove)
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current
-      const onMouseMove = (e: MouseEvent) => {
-        if (panning.current && lastMouseLocation.current) {
-          gameEngine.pan({
-            x: e.pageX - lastMouseLocation.current.x,
-            y: e.pageY - lastMouseLocation.current.y,
-          })
-        }
-        lastMouseLocation.current = { x: e.pageX, y: e.pageY }
-      }
-      canvas.addEventListener('mousemove', onMouseMove)
-
-      return () => canvas.removeEventListener('mousemove', onMouseMove)
-    }
-  }, [canvasRef])
+    return () => canvas.removeEventListener('mousemove', onMouseMove)
+  }, canvasRef)
 
   return (
     <canvas
