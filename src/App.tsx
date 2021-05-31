@@ -1,15 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import useWindowSize from './hooks/useWindowSize'
 
-interface Customer {
+interface Point {
   x: number
   y: number
 }
 
-interface Tower {
-  x: number
-  y: number
-}
+interface Customer extends Point {}
+
+interface Tower extends Point {}
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
