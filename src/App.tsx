@@ -1,9 +1,31 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import useWindowSize from './hooks/useWindowSize'
+
+interface Customer {
+  x: number
+  y: number
+}
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [width, height] = useWindowSize()
+
+  const [customers, setCustomers] = useState<Array<Customer>>([])
+  useEffect(() => {
+    setCustomers(
+      Array(100)
+        .fill(null)
+        .map(() => {
+          const magnitude = Math.random() ** 2 * 512
+          const angle = Math.random() * Math.PI * 2
+          return {
+            x: Math.sin(angle) * magnitude,
+            y: Math.cos(angle) * magnitude,
+          }
+        }),
+    )
+  }, [])
+
   useLayoutEffect(() => {
     if (canvasRef.current !== null) {
       const context = (canvasRef.current as HTMLCanvasElement).getContext(
@@ -11,8 +33,21 @@ function App() {
       )!
       context.fillStyle = 'black'
       context.fillRect(0, 0, width, height)
+
+      context.fillStyle = 'gray'
+      customers
+        .map(({ x, y }) => ({ x: x + width / 2, y: y + height / 2 }))
+        .filter(
+          ({ x, y }) => x >= 0 && x <= width && y >= 0 && y <= height,
+        )
+        .forEach(({ x, y }) => {
+          context.beginPath()
+          context.ellipse(x, y, 4, 4, 0, 0, Math.PI * 2)
+          context.fill()
+        })
     }
-  }, [canvasRef, width, height])
+  }, [canvasRef, width, height, customers])
+
   return (
     <canvas
       ref={canvasRef}
