@@ -6,9 +6,40 @@ interface Point {
   y: number
 }
 
-interface Customer extends Point {}
+interface Customer {
+  location: Point
+}
 
-interface Tower extends Point {}
+interface Tower {
+  location: Point
+}
+
+function toScreenLocation(
+  width: number,
+  height: number,
+  { x, y }: Point,
+): Point {
+  return {
+    x: x + width / 2,
+    y: y + height / 2,
+  }
+}
+
+interface Envelope {
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+
+function contains(envelope: Envelope, location: Point) {
+  return (
+    location.x >= envelope.left &&
+    location.x <= envelope.right &&
+    location.y >= envelope.top &&
+    location.y <= envelope.bottom
+  )
+}
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -23,8 +54,10 @@ function App() {
           const magnitude = Math.random() ** 2 * 512
           const angle = Math.random() * Math.PI * 2
           return {
-            x: Math.sin(angle) * magnitude,
-            y: Math.cos(angle) * magnitude,
+            location: {
+              x: Math.sin(angle) * magnitude,
+              y: Math.cos(angle) * magnitude,
+            },
           }
         }),
     )
@@ -39,8 +72,10 @@ function App() {
           const magnitude = 64
           const angle = Math.random() * Math.PI * 2
           return {
-            x: Math.sin(angle) * magnitude,
-            y: Math.cos(angle) * magnitude,
+            location: {
+              x: Math.sin(angle) * magnitude,
+              y: Math.cos(angle) * magnitude,
+            },
           }
         }),
     )
@@ -58,25 +93,45 @@ function App() {
 
       context.fillStyle = 'gray'
       customers
-        .map(({ x, y }) => ({ x: x + width / 2, y: y + height / 2 }))
-        .filter(
-          ({ x, y }) => x >= 0 && x <= width && y >= 0 && y <= height,
+        .map((customer) => ({
+          ...customer,
+          location: toScreenLocation(width, height, customer.location),
+        }))
+        .filter(({ location }) =>
+          contains(
+            { left: 0, top: 0, right: width, bottom: height },
+            location,
+          ),
         )
-        .forEach(({ x, y }) => {
+        .forEach(({ location }) => {
           context.beginPath()
-          context.ellipse(x, y, 4, 4, 0, 0, Math.PI * 2)
+          context.ellipse(location.x, location.y, 4, 4, 0, 0, Math.PI * 2)
           context.fill()
         })
 
       context.strokeStyle = 'green'
       towers
-        .map(({ x, y }) => ({ x: x + width / 2, y: y + height / 2 }))
-        .filter(
-          ({ x, y }) => x >= 0 && x <= width && y >= 0 && y <= height,
+        .map((tower) => ({
+          ...tower,
+          location: toScreenLocation(width, height, tower.location),
+        }))
+        .filter(({ location }) =>
+          contains(
+            { left: 0, top: 0, right: width, bottom: height },
+            location,
+          ),
         )
-        .forEach(({ x, y }) => {
+        .forEach(({ location }) => {
           context.beginPath()
-          context.ellipse(x, y, 64, 64, 0, 0, Math.PI * 2)
+          context.ellipse(
+            location.x,
+            location.y,
+            64,
+            64,
+            0,
+            0,
+            Math.PI * 2,
+          )
           context.stroke()
         })
     }
