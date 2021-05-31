@@ -1,8 +1,14 @@
 class GameEngine {
   canvas?: HTMLCanvasElement
+  viewport: Viewport = {
+    center: { x: 0, y: 0 },
+    size: { x: window.innerWidth, y: window.innerHeight },
+  }
+  hasUpdated: Boolean = false
+  interval: NodeJS.Timeout
+
   customers: Array<Customer> = []
   towers: Array<Tower> = []
-  center: Vector2 = { x: 0, y: 0 }
 
   constructor() {
     this.towers = Array(1)
@@ -37,25 +43,20 @@ class GameEngine {
           (tower) => magnitude(tower.location, customer.location) <= 64,
         ),
       }))
+
+    this.interval = setInterval(() => {
+      if (this.hasUpdated) {
+        this.render()
+      }
+    }, 1 / 30)
   }
 
-  setCanvas(canvas: HTMLCanvasElement) {
-    this.canvas = canvas
-    window.addEventListener('resize', this.render.bind(this))
-    this.render()
+  stop() {
+    clearInterval(this.interval)
   }
 
   render() {
-    const width = window.innerWidth
-    const height = window.innerHeight
-
-    const viewport: Viewport = {
-      size: {
-        x: width,
-        y: height,
-      },
-      center: this.center,
-    }
+    const { x: width, y: height } = this.viewport.size
 
     this.canvas!.width = width
     this.canvas!.height = height
@@ -68,7 +69,7 @@ class GameEngine {
     this.customers
       .map((customer) => ({
         ...customer,
-        location: toScreenLocation(viewport, customer.location),
+        location: toScreenLocation(this.viewport, customer.location),
       }))
       .filter(({ location }) =>
         contains(
@@ -87,7 +88,7 @@ class GameEngine {
     this.towers
       .map((tower) => ({
         ...tower,
-        location: toScreenLocation(viewport, tower.location),
+        location: toScreenLocation(this.viewport, tower.location),
       }))
       .filter(({ location }) =>
         contains(
@@ -102,12 +103,31 @@ class GameEngine {
       })
   }
 
-  pan(offset: Vector2) {
-    this.center = {
-      x: this.center.x - offset.x,
-      y: this.center.y - offset.y,
+  setCanvas(canvas: HTMLCanvasElement) {
+    this.canvas = canvas
+    this.hasUpdated = true
+  }
+
+  resize() {
+    this.viewport = {
+      ...this.viewport,
+      size: {
+        x: window.innerWidth,
+        y: window.innerHeight,
+      },
     }
-    this.render()
+    this.hasUpdated = true
+  }
+
+  pan(offset: Vector2) {
+    this.viewport = {
+      ...this.viewport,
+      center: {
+        x: this.viewport.center.x - offset.x,
+        y: this.viewport.center.y - offset.y,
+      },
+    }
+    this.hasUpdated = true
   }
 }
 

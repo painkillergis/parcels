@@ -11,6 +11,7 @@ function App() {
   useEffect(() => {
     if (canvasRef.current) {
       gameEngine.setCanvas(canvasRef.current)
+      return () => gameEngine.stop()
     }
   }, [canvasRef])
 
