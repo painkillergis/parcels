@@ -48,6 +48,13 @@ class GameEngine {
     const width = window.innerWidth
     const height = window.innerHeight
 
+    const viewport: Viewport = {
+      size: {
+        x: width,
+        y: height,
+      },
+    }
+
     this.canvas!.width = width
     this.canvas!.height = height
 
@@ -59,7 +66,7 @@ class GameEngine {
     this.customers
       .map((customer) => ({
         ...customer,
-        location: toScreenLocation(width, height, customer.location),
+        location: toScreenLocation(viewport, customer.location),
       }))
       .filter(({ location }) =>
         contains(
@@ -78,7 +85,7 @@ class GameEngine {
     this.towers
       .map((tower) => ({
         ...tower,
-        location: toScreenLocation(width, height, tower.location),
+        location: toScreenLocation(viewport, tower.location),
       }))
       .filter(({ location }) =>
         contains(
@@ -99,14 +106,14 @@ interface Vector2 {
   y: number
 }
 
-function toScreenLocation(
-  width: number,
-  height: number,
-  { x, y }: Vector2,
-): Vector2 {
+interface Viewport {
+  size: Vector2
+}
+
+function toScreenLocation(viewport: Viewport, location: Vector2): Vector2 {
   return {
-    x: width / 2 + x,
-    y: height / 2 - y,
+    x: viewport.size.x / 2 + location.x,
+    y: viewport.size.y / 2 - location.y,
   }
 }
 
