@@ -19,8 +19,8 @@ function App() {
     if (canvasRef.current) {
       const canvas = canvasRef.current
 
-      const startPanning = (e: MouseEvent) => (panning.current = true)
-      const finishPanning = (e: MouseEvent) => (panning.current = false)
+      const startPanning = () => (panning.current = true)
+      const finishPanning = () => (panning.current = false)
 
       canvas.addEventListener('mousedown', startPanning)
       canvas.addEventListener('mouseup', finishPanning)
