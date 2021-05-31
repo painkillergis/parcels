@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import useWindowSize from './hooks/useWindowSize'
+import useViewport from './hooks/useViewport'
 
 interface Point {
   x: number
@@ -43,7 +43,7 @@ function contains(envelope: Envelope, location: Point) {
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [width, height] = useWindowSize()
+  const { width, height } = useViewport()
 
   const [customers, setCustomers] = useState<Array<Customer>>([])
   useEffect(() => {
