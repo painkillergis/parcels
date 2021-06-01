@@ -44,6 +44,14 @@ function App() {
     return () => canvas.removeEventListener('mousemove', onMouseMove)
   }, canvasRef)
 
+  useCanvasEffect((canvas) => {
+    const onWheel = (e: WheelEvent) => {
+      gameEngine.zoom(e.deltaY)
+    }
+    canvas.addEventListener('wheel', onWheel)
+    return () => canvas.removeEventListener('wheel', onWheel)
+  }, canvasRef)
+
   return (
     <canvas
       ref={canvasRef}

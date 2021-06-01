@@ -3,6 +3,7 @@ class GameEngine {
   viewport: Viewport = {
     center: { x: 0, y: 0 },
     size: { x: window.innerWidth, y: window.innerHeight },
+    zoom: 2 ** 1,
   }
   hasUpdated: Boolean = true
   interval: NodeJS.Timeout
@@ -90,6 +91,7 @@ class GameEngine {
       })
 
     context.strokeStyle = 'green'
+    context.lineWidth = 2
     this.towers
       .map((tower) => ({
         ...tower,
@@ -103,7 +105,15 @@ class GameEngine {
       )
       .forEach(({ location }) => {
         context.beginPath()
-        context.ellipse(location.x, location.y, 64, 64, 0, 0, Math.PI * 2)
+        context.ellipse(
+          location.x,
+          location.y,
+          64 * this.viewport.zoom ** 2,
+          64 * this.viewport.zoom ** 2,
+          0,
+          0,
+          Math.PI * 2,
+        )
         context.stroke()
       })
   }
@@ -127,9 +137,20 @@ class GameEngine {
     this.viewport = {
       ...this.viewport,
       center: {
-        x: this.viewport.center.x - offset.x,
-        y: this.viewport.center.y - offset.y,
+        x: this.viewport.center.x - offset.x / this.viewport.zoom ** 2,
+        y: this.viewport.center.y - offset.y / this.viewport.zoom ** 2,
       },
+    }
+    this.hasUpdated = true
+  }
+
+  zoom(delta: number) {
+    this.viewport = {
+      ...this.viewport,
+      zoom: Math.min(
+        2 ** 2,
+        Math.max(2 ** 0, this.viewport.zoom + delta / 2 ** 10),
+      ),
     }
     this.hasUpdated = true
   }
@@ -143,12 +164,17 @@ export interface Vector2 {
 interface Viewport {
   size: Vector2
   center: Vector2
+  zoom: number
 }
 
 function toScreenLocation(viewport: Viewport, location: Vector2): Vector2 {
   return {
-    x: viewport.size.x / 2 + location.x - viewport.center.x,
-    y: viewport.size.y / 2 - location.y - viewport.center.y,
+    x:
+      viewport.size.x / 2 +
+      (location.x - viewport.center.x) * viewport.zoom ** 2,
+    y:
+      viewport.size.y / 2 +
+      (location.y - viewport.center.y) * viewport.zoom ** 2,
   }
 }
 
