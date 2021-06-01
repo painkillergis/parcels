@@ -167,17 +167,6 @@ interface Viewport {
   zoom: number
 }
 
-function toScreenLocation(viewport: Viewport, location: Vector2): Vector2 {
-  return {
-    x:
-      viewport.size.x / 2 +
-      (location.x - viewport.center.x) * viewport.zoom ** 2,
-    y:
-      viewport.size.y / 2 +
-      (location.y - viewport.center.y) * viewport.zoom ** 2,
-  }
-}
-
 interface Customer {
   location: Vector2
   isServiced: Boolean
@@ -192,6 +181,17 @@ interface Envelope {
   top: number
   right: number
   bottom: number
+}
+
+function toScreenLocation(viewport: Viewport, location: Vector2): Vector2 {
+  return {
+    x:
+      viewport.size.x / 2 +
+      (location.x - viewport.center.x) * viewport.zoom ** 2,
+    y:
+      viewport.size.y / 2 +
+      (location.y - viewport.center.y) * viewport.zoom ** 2,
+  }
 }
 
 function contains(envelope: Envelope, location: Vector2) {
