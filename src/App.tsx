@@ -6,14 +6,13 @@ const gameEngine = new GameEngine()
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const panning = useRef<Boolean>(false)
-  const lastMouseLocation = useRef<Vector2>()
 
   useCanvasEffect((canvas) => {
     gameEngine.setCanvas(canvas)
     return () => gameEngine.stop()
   }, canvasRef)
 
+  const panning = useRef<Boolean>(false)
   useCanvasEffect((canvas) => {
     const startPanning = () => (panning.current = true)
     const finishPanning = () => (panning.current = false)
@@ -29,6 +28,7 @@ function App() {
     }
   }, canvasRef)
 
+  const lastMouseLocation = useRef<Vector2>()
   useCanvasEffect((canvas) => {
     const onMouseMove = (e: MouseEvent) => {
       if (panning.current && lastMouseLocation.current) {
