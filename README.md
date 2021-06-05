@@ -10,7 +10,5 @@ At the moment, the infrastructure component is very boring: click to place a tow
 
 ## Feature Queue
 
-1. Start the player with 10,000 currency
-1. Towers cost 8,000
 1. Tower upkeep per second is 80
 1. Revenue per customer per second is 5
