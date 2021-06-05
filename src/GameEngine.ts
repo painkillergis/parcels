@@ -53,11 +53,6 @@ class GameEngine {
     window.addEventListener('resize', this.resize)
   }
 
-  stop() {
-    clearInterval(this.interval)
-    window.removeEventListener('resize', this.resize)
-  }
-
   render() {
     const { x: width, y: height } = this.viewport.size
 

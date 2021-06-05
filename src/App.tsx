@@ -7,10 +7,7 @@ const gameEngine = new GameEngine()
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  useCanvasEffect((canvas) => {
-    gameEngine.setCanvas(canvas)
-    return () => gameEngine.stop()
-  }, canvasRef)
+  useCanvasEffect((canvas) => gameEngine.setCanvas(canvas), canvasRef)
 
   const panning = useRef<Boolean>(false)
   useCanvasEffect((canvas) => {
