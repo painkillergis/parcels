@@ -1,13 +1,26 @@
-import { useRef } from 'react'
-import GameEngine, { Vector2 } from './GameEngine'
+import { useEffect, useRef, useState } from 'react'
+import GameEngine, { Action, Vector2 } from './GameEngine'
 import useCanvasEffect from './hooks/useCanvasEffect'
 
 const gameEngine = new GameEngine()
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
   useCanvasEffect((canvas) => gameEngine.setCanvas(canvas), canvasRef)
+
+  const [money, setMoney] = useState(0)
+  useEffect(() => {
+    const eventListener = (action: Action) => {
+      switch (action.type) {
+        case 'updateMoney':
+          return setMoney(action.payload)
+        default:
+          throw new Error(`irreducible type '${action.type}'`)
+      }
+    }
+    gameEngine.addEventListener(eventListener)
+    return () => gameEngine.removeEventListener(eventListener)
+  }, [])
 
   const panning = useRef<Boolean>(false)
   useCanvasEffect((canvas) => {
@@ -71,14 +84,22 @@ function App() {
   }, canvasRef)
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'block',
-      }}
-    />
+    <>
+      <div
+        id="hud"
+        style={{ position: 'fixed', padding: '0.5em', color: 'white' }}
+      >
+        Money: {money}
+      </div>
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'block',
+        }}
+      />
+    </>
   )
 }
 

@@ -10,6 +10,7 @@ class GameEngine {
 
   customers: Array<Customer> = []
   towers: Array<Tower> = []
+  money: number = 10_000
 
   constructor() {
     this.towers = Array(1)
@@ -114,6 +115,12 @@ class GameEngine {
     this.canvas = canvas
   }
 
+  addEventListener(eventListener: (action: Action) => void): void {
+    eventListener({ type: 'updateMoney', payload: this.money })
+  }
+
+  removeEventListener(eventListener: (action: Action) => void) {}
+
   resize() {
     this.viewport = {
       ...this.viewport,
@@ -159,6 +166,11 @@ class GameEngine {
 export interface Vector2 {
   x: number
   y: number
+}
+
+export interface Action {
+  type: String
+  payload: any
 }
 
 interface Viewport {
