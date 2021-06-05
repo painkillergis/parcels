@@ -53,7 +53,13 @@ class GameEngine {
         }
       }, 1 / 30),
       setInterval(() => {
-        this.setMoney(this.money - 80 * this.towers.length)
+        this.setMoney(
+          this.money -
+            80 * this.towers.length +
+            5 *
+              this.customers.filter((customer) => customer.isServiced)
+                .length,
+        )
       }, 1000),
     ]
 
