@@ -12,6 +12,8 @@ class GameEngine {
   towers: Array<Tower> = []
   money: number = 10_000
 
+  eventListeners: Array<EventListener> = []
+
   constructor() {
     this.towers = Array(1)
       .fill(null)
@@ -115,11 +117,16 @@ class GameEngine {
     this.canvas = canvas
   }
 
-  addEventListener(eventListener: (action: Action) => void): void {
+  addEventListener(eventListener: EventListener) {
     eventListener({ type: 'updateMoney', payload: this.money })
+    this.eventListeners.push(eventListener)
   }
 
-  removeEventListener(eventListener: (action: Action) => void) {}
+  removeEventListener(eventListener: EventListener) {
+    this.eventListeners = this.eventListeners.filter(
+      (_eventListener) => _eventListener !== eventListener,
+    )
+  }
 
   resize() {
     this.viewport = {
@@ -155,11 +162,23 @@ class GameEngine {
   }
 
   createTower(screenLocation: Vector2) {
-    this.towers.push({
-      location: fromScreenLocation(this.viewport, screenLocation),
-    })
-    this.customers = setIsServiced(this.towers, this.customers)
-    this.hasUpdated = true
+    if (this.money >= 8000) {
+      this.setMoney(this.money - 8000)
+      this.towers.push({
+        location: fromScreenLocation(this.viewport, screenLocation),
+      })
+      this.customers = setIsServiced(this.towers, this.customers)
+      this.hasUpdated = true
+    }
+  }
+
+  setMoney(money: number) {
+    this.money = money
+    this.dispatch({ type: 'updateMoney', payload: money })
+  }
+
+  dispatch(action: Action) {
+    this.eventListeners.forEach((eventListener) => eventListener(action))
   }
 }
 
@@ -167,6 +186,8 @@ export interface Vector2 {
   x: number
   y: number
 }
+
+export type EventListener = (action: Action) => void
 
 export interface Action {
   type: String
