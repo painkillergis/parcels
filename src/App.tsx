@@ -52,6 +52,27 @@ function App() {
     return () => canvas.removeEventListener('wheel', onWheel)
   }, canvasRef)
 
+  const lastMouseDownEvent = useRef<MouseEvent>()
+  useCanvasEffect((canvas) => {
+    const onMouseDown = (e: MouseEvent) => (lastMouseDownEvent.current = e)
+    const onMouseUp = (e: MouseEvent) => {
+      const dx = e.pageX - lastMouseDownEvent.current!.pageX
+      const dy = e.pageY - lastMouseDownEvent.current!.pageY
+      if (Math.sqrt(dx ** 2 + dy ** 2) < 8) {
+        gameEngine.createTower({
+          x: e.pageX,
+          y: e.pageY,
+        })
+      }
+    }
+    canvas.addEventListener('mousedown', onMouseDown)
+    canvas.addEventListener('mouseup', onMouseUp)
+    return () => {
+      canvas.removeEventListener('mousedown', onMouseDown)
+      canvas.removeEventListener('mouseup', onMouseUp)
+    }
+  }, canvasRef)
+
   return (
     <canvas
       ref={canvasRef}

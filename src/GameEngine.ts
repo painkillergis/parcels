@@ -25,25 +25,22 @@ class GameEngine {
         }
       })
 
-    this.customers = Array(100)
-      .fill(null)
-      .map(() => {
-        const magnitude = Math.random() ** 2 * 512
-        const angle = Math.random() * Math.PI * 2
-        return {
-          location: {
-            x: Math.sin(angle) * magnitude,
-            y: Math.cos(angle) * magnitude,
-          },
-          isServiced: false,
-        }
-      })
-      .map((customer) => ({
-        ...customer,
-        isServiced: this.towers.some(
-          (tower) => magnitude(tower.location, customer.location) <= 64,
-        ),
-      }))
+    this.customers = setIsServiced(
+      this.towers,
+      Array(100)
+        .fill(null)
+        .map(() => {
+          const magnitude = Math.random() ** 2 * 512
+          const angle = Math.random() * Math.PI * 2
+          return {
+            location: {
+              x: Math.sin(angle) * magnitude,
+              y: Math.cos(angle) * magnitude,
+            },
+            isServiced: false,
+          }
+        }),
+    )
 
     this.interval = setInterval(() => {
       if (this.canvas && this.hasUpdated) {
@@ -154,6 +151,14 @@ class GameEngine {
     }
     this.hasUpdated = true
   }
+
+  createTower(screenLocation: Vector2) {
+    this.towers.push({
+      location: fromScreenLocation(this.viewport, screenLocation),
+    })
+    this.customers = setIsServiced(this.towers, this.customers)
+    this.hasUpdated = true
+  }
 }
 
 export interface Vector2 {
@@ -183,6 +188,18 @@ interface Envelope {
   bottom: number
 }
 
+function setIsServiced(
+  towers: Array<Tower>,
+  customers: Array<Customer>,
+): Array<Customer> {
+  return customers.map((customer) => ({
+    ...customer,
+    isServiced: towers.some(
+      (tower) => magnitude(tower.location, customer.location) <= 64,
+    ),
+  }))
+}
+
 function toScreenLocation(viewport: Viewport, location: Vector2): Vector2 {
   return {
     x:
@@ -191,6 +208,20 @@ function toScreenLocation(viewport: Viewport, location: Vector2): Vector2 {
     y:
       viewport.size.y / 2 +
       (location.y - viewport.center.y) * viewport.zoom ** 2,
+  }
+}
+
+function fromScreenLocation(
+  viewport: Viewport,
+  location: Vector2,
+): Vector2 {
+  return {
+    x:
+      (location.x - viewport.size.x / 2) / viewport.zoom ** 2 +
+      viewport.center.x,
+    y:
+      (location.y - viewport.size.y / 2) / viewport.zoom ** 2 +
+      viewport.center.y,
   }
 }
 
