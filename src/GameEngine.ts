@@ -6,7 +6,7 @@ class GameEngine {
     zoom: 2 ** 1,
   }
   hasUpdated: Boolean = true
-  interval: NodeJS.Timeout
+  intervals: Array<NodeJS.Timeout> = []
 
   customers: Array<Customer> = []
   towers: Array<Tower> = []
@@ -45,12 +45,17 @@ class GameEngine {
         }),
     )
 
-    this.interval = setInterval(() => {
-      if (this.canvas && this.hasUpdated) {
-        this.hasUpdated = false
-        this.render()
-      }
-    }, 1 / 30)
+    this.intervals = [
+      setInterval(() => {
+        if (this.canvas && this.hasUpdated) {
+          this.hasUpdated = false
+          this.render()
+        }
+      }, 1 / 30),
+      setInterval(() => {
+        this.setMoney(this.money - 80 * this.towers.length)
+      }, 1000),
+    ]
 
     this.resize = this.resize.bind(this)
     window.addEventListener('resize', this.resize)

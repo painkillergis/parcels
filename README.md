@@ -10,5 +10,4 @@ At the moment, the infrastructure component is very boring: click to place a tow
 
 ## Feature Queue
 
-1. Tower upkeep per second is 80
 1. Revenue per customer per second is 5
