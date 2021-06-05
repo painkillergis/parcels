@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import Notifications, { Notification } from './components/Notifications'
 import GameEngine, { Action, Vector2 } from './GameEngine'
 import useCanvasEffect from './hooks/useCanvasEffect'
 
@@ -9,9 +10,14 @@ function App() {
   useCanvasEffect((canvas) => gameEngine.setCanvas(canvas), canvasRef)
 
   const [money, setMoney] = useState(0)
+  const [message, setMessage] = useState<string>()
   useEffect(() => {
     const eventListener = (action: Action) => {
       switch (action.type) {
+        case 'purchaseFailed':
+          return setMessage(
+            `Insufficient funds. An additional ${action.payload.additionalMoneyRequired} is required.`,
+          )
         case 'updateMoney':
           return setMoney(action.payload)
         default:
@@ -91,6 +97,12 @@ function App() {
       >
         Money: {money}
       </div>
+      <Notifications>
+        <Notification
+          dismiss={() => setMessage(undefined)}
+          message={message}
+        />
+      </Notifications>
       <canvas
         ref={canvasRef}
         style={{

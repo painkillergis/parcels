@@ -169,6 +169,11 @@ class GameEngine {
       })
       this.customers = setIsServiced(this.towers, this.customers)
       this.hasUpdated = true
+    } else {
+      this.dispatch({
+        type: 'purchaseFailed',
+        payload: { additionalMoneyRequired: 8000 - this.money },
+      })
     }
   }
 
@@ -191,7 +196,7 @@ export type EventListener = (action: Action) => void
 
 export interface Action {
   type: String
-  payload: any
+  payload?: any
 }
 
 interface Viewport {
