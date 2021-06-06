@@ -191,6 +191,14 @@ class GameEngine {
   setMoney(money: number) {
     this.money = money
     this.dispatch({ type: 'updateMoney', payload: money })
+    this.dispatch({
+      type: 'updateTowers',
+      payload: this.towers,
+    })
+    this.dispatch({
+      type: 'updateCustomers',
+      payload: this.customers.filter(({ isServiced }) => isServiced),
+    })
   }
 
   dispatch(action: Action) {

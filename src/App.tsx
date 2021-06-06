@@ -11,6 +11,8 @@ function App() {
 
   const [money, setMoney] = useState(0)
   const [moneyRate, setMoneyRate] = useState(0)
+  const [towers, setTowers] = useState([])
+  const [customers, setCustomers] = useState([])
   const [message, setMessage] = useState<string>()
   const lastMoney = useRef(money)
   useEffect(() => {
@@ -24,6 +26,10 @@ function App() {
           setMoneyRate(action.payload - lastMoney.current)
           lastMoney.current = action.payload
           return setMoney(action.payload)
+        case 'updateTowers':
+          return setTowers(action.payload)
+        case 'updateCustomers':
+          return setCustomers(action.payload)
         default:
           throw new Error(`irreducible type '${action.type}'`)
       }
@@ -99,7 +105,19 @@ function App() {
         id="hud"
         style={{ position: 'fixed', padding: '0.5em', color: 'white' }}
       >
-        Money: {money} ({moneyRate}/s)
+        <div>
+          Money: {money} ({moneyRate}/s){' '}
+        </div>
+        <div>Towers: {towers.length}</div>
+        <div>
+          Upkeep:{' '}
+          {towers.reduce(
+            (upkeep, { baseUpkeep }) => upkeep + baseUpkeep,
+            0,
+          )}
+          /s
+        </div>
+        <div>Customers: {customers.length}</div>
       </div>
       <Notifications>
         <Notification
