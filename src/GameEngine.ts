@@ -30,10 +30,10 @@ class GameEngine {
 
     this.customers = setIsServiced(
       this.towers,
-      Array(100)
+      Array(1000)
         .fill(null)
         .map(() => {
-          const magnitude = Math.random() ** 2 * 512
+          const magnitude = Math.random() ** 2 * 4096
           const angle = Math.random() * Math.PI * 2
           return {
             location: {
@@ -53,9 +53,10 @@ class GameEngine {
         }
       }, 1 / 30),
       setInterval(() => {
+        const upkeep = 200
         this.setMoney(
           this.money -
-            80 * this.towers.length +
+            upkeep * this.towers.length +
             5 *
               this.customers.filter((customer) => customer.isServiced)
                 .length,
