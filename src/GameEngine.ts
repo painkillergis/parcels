@@ -48,10 +48,12 @@ class GameEngine {
         }
       }, 1 / 30),
       setInterval(() => {
-        const upkeep = 200
         this.setMoney(
           this.money -
-            upkeep * this.towers.length +
+            this.towers.reduce(
+              (upkeep, { baseUpkeep }) => upkeep + baseUpkeep,
+              0,
+            ) +
             5 *
               this.customers.filter((customer) => customer.isServiced)
                 .length,
@@ -174,6 +176,7 @@ class GameEngine {
       this.setMoney(this.money - cost)
       this.towers.push({
         location: fromScreenLocation(this.viewport, screenLocation),
+        baseUpkeep: 200,
       })
       this.customers = setIsServiced(this.towers, this.customers)
       this.hasUpdated = true
@@ -220,6 +223,7 @@ interface Customer {
 
 interface Tower {
   location: Vector2
+  baseUpkeep: number
 }
 
 interface Envelope {
