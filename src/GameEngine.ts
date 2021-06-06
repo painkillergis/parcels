@@ -172,7 +172,7 @@ class GameEngine {
     this.hasUpdated = true
   }
 
-  createTower(screenLocation: Vector2) {
+  purchaseTower(screenLocation: Vector2) {
     const cost = 5000
     if (this.money >= cost) {
       this.setMoney(this.money - cost)

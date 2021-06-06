@@ -75,7 +75,7 @@ function App() {
       const dx = e.pageX - lastMouseDownEvent.current!.pageX
       const dy = e.pageY - lastMouseDownEvent.current!.pageY
       if (Math.sqrt(dx ** 2 + dy ** 2) < 8) {
-        gameEngine.createTower({
+        gameEngine.purchaseTower({
           x: e.pageX,
           y: e.pageY,
         })
