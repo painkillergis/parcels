@@ -15,19 +15,6 @@ class GameEngine {
   eventListeners: Array<EventListener> = []
 
   constructor() {
-    this.towers = Array(1)
-      .fill(null)
-      .map(() => {
-        const magnitude = 64
-        const angle = Math.random() * Math.PI * 2
-        return {
-          location: {
-            x: Math.sin(angle) * magnitude,
-            y: Math.cos(angle) * magnitude,
-          },
-        }
-      })
-
     this.customers = setIsServiced(
       this.towers,
       Array(1000)
