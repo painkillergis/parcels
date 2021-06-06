@@ -3,7 +3,7 @@ class GameEngine {
   viewport: Viewport = {
     center: { x: 0, y: 0 },
     size: { x: window.innerWidth, y: window.innerHeight },
-    zoom: 2 ** 1,
+    zoom: 2 ** -1,
   }
   hasUpdated: Boolean = true
   intervals: Array<NodeJS.Timeout> = []
@@ -17,19 +17,27 @@ class GameEngine {
   constructor() {
     this.customers = setIsServiced(
       this.towers,
-      Array(1000)
+      Array(16)
         .fill(null)
-        .map(() => {
-          const magnitude = Math.random() ** 2 * 4096
-          const angle = Math.random() * Math.PI * 2
-          return {
-            location: {
-              x: Math.sin(angle) * magnitude,
-              y: Math.cos(angle) * magnitude,
-            },
-            isServiced: false,
-          }
-        }),
+        .map((i0, i1, index) => {
+          const centerX = (Math.random() * 2 - 1) * 2048
+          const centerY = (Math.random() * 2 - 1) * 2048
+          const spread = Math.random() * 4096 + 256
+          return Array(512)
+            .fill(null)
+            .map(() => {
+              const magnitude = Math.random() ** 2 * spread
+              const angle = Math.random() * Math.PI * 2
+              return {
+                location: {
+                  x: centerX + Math.sin(angle) * magnitude,
+                  y: centerY + Math.cos(angle) * magnitude,
+                },
+                isServiced: false,
+              }
+            })
+        })
+        .flat(),
     )
 
     this.intervals = [
@@ -154,7 +162,7 @@ class GameEngine {
       ...this.viewport,
       zoom: Math.min(
         2 ** 2,
-        Math.max(2 ** 0, this.viewport.zoom + delta / 2 ** 10),
+        Math.max(2 ** -1, this.viewport.zoom + delta / 2 ** 10),
       ),
     }
     this.hasUpdated = true
