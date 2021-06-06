@@ -10,7 +10,9 @@ function App() {
   useCanvasEffect((canvas) => gameEngine.setCanvas(canvas), canvasRef)
 
   const [money, setMoney] = useState(0)
+  const [moneyRate, setMoneyRate] = useState(0)
   const [message, setMessage] = useState<string>()
+  const lastMoney = useRef(money)
   useEffect(() => {
     const eventListener = (action: Action) => {
       switch (action.type) {
@@ -19,6 +21,8 @@ function App() {
             `Insufficient funds. An additional ${action.payload.additionalMoneyRequired} is required.`,
           )
         case 'updateMoney':
+          setMoneyRate(action.payload - lastMoney.current)
+          lastMoney.current = action.payload
           return setMoney(action.payload)
         default:
           throw new Error(`irreducible type '${action.type}'`)
@@ -95,7 +99,7 @@ function App() {
         id="hud"
         style={{ position: 'fixed', padding: '0.5em', color: 'white' }}
       >
-        Money: {money}
+        Money: {money} ({moneyRate}/s)
       </div>
       <Notifications>
         <Notification
