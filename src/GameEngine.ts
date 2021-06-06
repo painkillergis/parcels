@@ -173,8 +173,9 @@ class GameEngine {
   }
 
   createTower(screenLocation: Vector2) {
-    if (this.money >= 8000) {
-      this.setMoney(this.money - 8000)
+    const cost = 5000
+    if (this.money >= cost) {
+      this.setMoney(this.money - cost)
       this.towers.push({
         location: fromScreenLocation(this.viewport, screenLocation),
       })
@@ -183,7 +184,7 @@ class GameEngine {
     } else {
       this.dispatch({
         type: 'purchaseFailed',
-        payload: { additionalMoneyRequired: 8000 - this.money },
+        payload: { additionalMoneyRequired: cost - this.money },
       })
     }
   }
