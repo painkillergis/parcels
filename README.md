@@ -4,11 +4,12 @@ Lattice is a rudimentary game about building radio infrastructure to meet the ne
 
 ## High-Level Direction
 
-Lattice now has the customer and tower game objects as well as panning and zooming for getting around. The next step is to add some constraints to the game for the player to wrangle and make it fun for a few minutes. 
-
-At the moment, the infrastructure component is very boring: click to place a tower with a range of 64. By making towers sufficiently expensive, we can add some variation to the towers to allow players to better optimize how particular towers service customers and how many towers come together to work as a whole. Bandwidth between customers and towers is currently assumed to be infinite; adding a constraint here will necessitate using these variations to tailor local networks to local customers.
+The gameplay is pretty broken since it's so easy to accumulate customers in many clusters. It might add some backpressure to require the player to build a backhaul network originating at their first tower or a prescribed demarcation point.
 
 ## Feature Queue
 
-1. Aid placement with ghost tower
-1. Aid placement by highlighting potential customers in ghost tower range
+1. First tower is linked while subsequent towers are not. Customers are not serviced by inactive towers
+1. Backhauls can be created between two towers within range. Backhauls share linkage between towers and can bring inactive towers online. Backhauls have additional upkeep
+1. Backhauls have enough bandwidth for 100 customers. Attempting to oversubscribe the backhaul will cause oversubscribed customers to lose service
+1. Backhauls can be upgraded to service more customers
+
