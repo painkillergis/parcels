@@ -1,10 +1,10 @@
 {
-  "Comment": "Create CNAME for lattice.painkillergis.com",
+  "Comment": "Create CNAME for parcels.painkillergis.com",
   "Changes": [
     {
       "Action": "CREATE",
       "ResourceRecordSet": {
-        "Name": "lattice.painkillergis.com",
+        "Name": "parcels.painkillergis.com",
         "Type": "CNAME",
         "TTL": 300,
         "ResourceRecords": [

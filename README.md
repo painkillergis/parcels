@@ -1,15 +1,17 @@
-# lattice
+# parcels
 
-Lattice is a rudimentary game about building radio infrastructure to meet the needs of customers that are geographically distributed.
+Parcels is a webapp for navigating public and private county tax parcels. It's also a playground for learning React, canvas, WebGL, and other webapp/mapping technologies.
 
 ## High-Level Direction
 
-The gameplay is pretty broken since it's so easy to accumulate customers in many clusters. It might add some backpressure to require the player to build a backhaul network originating at their first tower or a prescribed demarcation point.
+We should be able to easily find the Crow Wing River hidden campsite using this app. This project is forked from Lattice (cell phone tower game) and already has some canvas/navigation basics. It would be a great start to symbolize public vs private parcels and show the user's location.
 
 ## Feature Queue
 
-1. First tower is linked while subsequent towers are not. Customers are not serviced by inactive towers
-1. Backhauls can be created between two towers within range. Backhauls share linkage between towers and can bring inactive towers online. Backhauls have additional upkeep
-1. Backhauls have enough bandwidth for 100 customers. Attempting to oversubscribe the backhaul will cause oversubscribed customers to lose service
-1. Backhauls can be upgraded to service more customers
-
+1. Render Hubbard parcel boundaries
+1. Hook up pan + zoom
+1. Symbolize public vs private
+1. Show current location
+1. Click to show parcel metadata
+1. Offline
+1. Offline OSM basemap
