@@ -51,7 +51,7 @@ function App() {
       ref={canvasRef}
       width={window.innerWidth}
       height={window.innerHeight}
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%', height: '100%', display: 'block' }}
     />
   )
 }
