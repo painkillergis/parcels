@@ -8,10 +8,13 @@ We should be able to easily find the Crow Wing River hidden campsite using this 
 
 ## Feature Queue
 
-1. Render Hubbard parcel boundaries
 1. Hook up pan + zoom
 1. Symbolize public vs private
 1. Show current location
 1. Click to show parcel metadata
 1. Offline
 1. Offline OSM basemap
+
+## Parking Lot
+1. Consider a projection like tranverse mercator or lambert conic conformal [per MNDOT](https://www.dot.state.mn.us/surveying/pdf/mncoordsys.pdf)
+1. Consider launching a test-first strategy
