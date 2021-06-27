@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { toScreenCoordinates } from './service/CoordinateTransformations'
 
 function App() {
   const parcels = useParcels()
@@ -14,21 +15,14 @@ function App() {
       context.strokeStyle = '#FFF'
       context.lineWidth = 1
       parcels?.features
-        ?.map((parcel: any) => ({
-          ...parcel,
-          geometry: {
-            ...parcel.geometry,
-            coordinates: parcel.geometry.coordinates.map(
-              (polygons: Array<Array<Array<any>>>) =>
-                polygons.map((polygon) =>
-                  polygon.map(([lon, lat]) => [
-                    (lon + 94.87038174907313) * 6000 + canvas.width / 2,
-                    (-lat + 46.90248960427145) * 6000 + canvas.height / 2,
-                  ]),
-                ),
-            ),
-          },
-        }))
+        ?.map((parcel: any) =>
+          toScreenCoordinates(
+            { width: canvas.width, height: canvas.height },
+            { x: -94.87038174907313, y: 46.90248960427145 },
+            6000,
+            parcel,
+          ),
+        )
         .forEach((parcel: any) => {
           parcel.geometry.coordinates.forEach(
             (multiPolygon: Array<Array<Array<number>>>) => {
