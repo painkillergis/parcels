@@ -22,8 +22,8 @@ function App() {
               (polygons: Array<Array<Array<any>>>) =>
                 polygons.map((polygon) =>
                   polygon.map(([lon, lat]) => [
-                    (lon + 94.67442039632837) * 1000 + 1000,
-                    (-lat + 47.06009890323808) * 1000 + 300,
+                    (lon + 94.87038174907313) * 6000 + canvas.width / 2,
+                    (-lat + 46.90248960427145) * 6000 + canvas.height / 2,
                   ]),
                 ),
             ),
