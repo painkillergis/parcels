@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { toScreenCoordinates } from './service/CoordinateTransformations'
+import 'google-protobuf'
+const { Parcels } = require('./proto/parcels_pb')
 
 function App() {
   const parcels = useParcels()
@@ -14,29 +16,23 @@ function App() {
 
       context.strokeStyle = '#FFF'
       context.lineWidth = 1
-      parcels?.features
-        ?.map((parcel: any) =>
+      parcels
+        ?.map((points: any) =>
           toScreenCoordinates(
             { width: canvas.width, height: canvas.height },
             { x: -94.87038174907313, y: 46.90248960427145 },
             6000,
-            parcel,
+            points,
           ),
         )
-        .forEach((parcel: any) => {
-          parcel.geometry.coordinates.forEach(
-            (multiPolygon: Array<Array<Array<number>>>) => {
-              multiPolygon.forEach((polygon) => {
-                context.moveTo(polygon[0][0], polygon[0][1])
-                context.beginPath()
-                polygon.slice(1, polygon.length).forEach(([x, y]) => {
-                  context.lineTo(x, y)
-                })
-                context.closePath()
-                context.stroke()
-              })
-            },
-          )
+        .forEach((points: any) => {
+          context.moveTo(points[0][0], points[0][1])
+          context.beginPath()
+          points.slice(1, points.length).forEach(([x, y]: any) => {
+            context.lineTo(x, y)
+          })
+          context.closePath()
+          context.stroke()
         })
     }
   }, [parcels, canvasRef])
@@ -53,8 +49,23 @@ function App() {
 function useParcels(): any | undefined {
   const [parcels, setParcels] = useState<any>()
   useEffect(() => {
-    fetch('/parcels.geojson')
-      .then((response) => response.json())
+    fetch('/parcels.pbf')
+      .then((response) => response.arrayBuffer())
+      .then((arrayBuffer) =>
+        Parcels.deserializeBinary(new Uint8Array(arrayBuffer)),
+      )
+      .then((container) =>
+        container
+          .getParcelsList()
+          .map((parcel: any) =>
+            parcel
+              .getPointsList()
+              .map((point: any) => [
+                point.getLongitude(),
+                point.getLatitude(),
+              ]),
+          ),
+      )
       .then((parcels) => setParcels(parcels))
   }, [])
   return parcels

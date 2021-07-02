@@ -1,0 +1,10 @@
+message Parcels {
+  message Parcel {
+    message LatLon {
+      required float latitude = 1;
+      required float longitude = 2;
+    }
+    repeated LatLon points = 1;
+  }
+  repeated Parcel parcels = 1;
+}
