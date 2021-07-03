@@ -16,10 +16,13 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (canvasRef.current && !loading) {
-      renderEngine.current.render(canvasRef.current!!)
-    }
-  }, [canvasRef, loading])
+    const interval = setInterval(() => {
+      if (canvasRef.current) {
+        renderEngine.current.render(canvasRef.current!!)
+      }
+    }, 1 / 30)
+    return () => clearInterval(interval)
+  }, [canvasRef])
 
   return (
     <>
