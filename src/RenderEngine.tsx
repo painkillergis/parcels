@@ -1,6 +1,8 @@
 import { toScreenCoordinates } from './service/CoordinateTransformations'
+import { Vector2 } from './types'
 
 class RenderEngine {
+  center: Vector2 = { x: -94.87038174907313, y: 46.90248960427145 }
   parcels: Array<Array<number>> = []
   hasUpdated: Boolean = false
 
@@ -19,7 +21,7 @@ class RenderEngine {
       ?.map((points: any) =>
         toScreenCoordinates(
           { width: canvas.width, height: canvas.height },
-          { x: -94.87038174907313, y: 46.90248960427145 },
+          this.center,
           6000,
           points,
         ),
@@ -37,6 +39,20 @@ class RenderEngine {
 
   setParcels(parcels: Array<Array<number>>) {
     this.parcels = parcels
+    this.hasUpdated = true
+  }
+
+  pan(screenDelta: Vector2) {
+    const worldDelta = {
+      x: screenDelta.x / 6000,
+      y: screenDelta.y / 6000,
+    }
+
+    this.center = {
+      x: this.center.x - worldDelta.x,
+      y: this.center.y + worldDelta.y,
+    }
+
     this.hasUpdated = true
   }
 }
