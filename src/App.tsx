@@ -1,42 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
-import { toScreenCoordinates } from './service/CoordinateTransformations'
-import 'google-protobuf'
 import Loading from './component/Loading'
-const { Parcels } = require('./proto/parcels_pb')
+import fetchParcels from './fetch/fetchParcels'
+import RenderEngine from './RenderEngine'
 
 function App() {
-  const [loading, parcels] = useParcels()
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const renderEngine = useRef(new RenderEngine())
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchParcels().then((parcels: any) => {
+      renderEngine.current.setParcels(parcels)
+      setLoading(false)
+    })
+  }, [])
+
   useEffect(() => {
     if (canvasRef.current && !loading) {
-      const canvas = canvasRef.current!!
-      const context = canvas.getContext('2d')!!
-      context.fillStyle = '#000'
-      context.rect(0, 0, canvas.width, canvas.height)
-      context.fill()
-
-      context.strokeStyle = '#FFF'
-      context.lineWidth = 1
-      parcels
-        ?.map((points: any) =>
-          toScreenCoordinates(
-            { width: canvas.width, height: canvas.height },
-            { x: -94.87038174907313, y: 46.90248960427145 },
-            6000,
-            points,
-          ),
-        )
-        .forEach((points: any) => {
-          context.moveTo(points[0][0], points[0][1])
-          context.beginPath()
-          points.slice(1, points.length).forEach(([x, y]: any) => {
-            context.lineTo(x, y)
-          })
-          context.closePath()
-          context.stroke()
-        })
+      renderEngine.current.render(canvasRef.current!!)
     }
-  }, [canvasRef, loading, parcels])
+  }, [canvasRef, loading])
+
   return (
     <>
       <Loading loading={loading} />
@@ -48,35 +32,6 @@ function App() {
       />
     </>
   )
-}
-
-function useParcels(): any | undefined {
-  const [parcels, setParcels] = useState<any>()
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    fetch('/parcels.pbf')
-      .then((response) => response.arrayBuffer())
-      .then((arrayBuffer) =>
-        Parcels.deserializeBinary(new Uint8Array(arrayBuffer)),
-      )
-      .then((container) =>
-        container
-          .getParcelsList()
-          .map((parcel: any) =>
-            parcel
-              .getPointsList()
-              .map((point: any) => [
-                point.getLongitude(),
-                point.getLatitude(),
-              ]),
-          ),
-      )
-      .then((parcels) => {
-        setParcels(parcels)
-        setLoading(false)
-      })
-  }, [])
-  return [loading, parcels]
 }
 
 export default App
