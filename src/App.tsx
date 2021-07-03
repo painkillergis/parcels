@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { toScreenCoordinates } from './service/CoordinateTransformations'
 import 'google-protobuf'
+import Loading from './component/Loading'
 const { Parcels } = require('./proto/parcels_pb')
 
 function App() {
-  const parcels = useParcels()
+  const [loading, parcels] = useParcels()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
-    if (canvasRef.current && parcels !== undefined) {
+    if (canvasRef.current && !loading) {
       const canvas = canvasRef.current!!
       const context = canvas.getContext('2d')!!
       context.fillStyle = '#000'
@@ -35,19 +36,23 @@ function App() {
           context.stroke()
         })
     }
-  }, [parcels, canvasRef])
+  }, [canvasRef, loading, parcels])
   return (
-    <canvas
-      ref={canvasRef}
-      width={window.innerWidth}
-      height={window.innerHeight}
-      style={{ width: '100%', height: '100%', display: 'block' }}
-    />
+    <>
+      <Loading loading={loading} />
+      <canvas
+        ref={canvasRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        style={{ width: '100%', height: '100%', display: 'block' }}
+      />
+    </>
   )
 }
 
 function useParcels(): any | undefined {
   const [parcels, setParcels] = useState<any>()
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetch('/parcels.pbf')
       .then((response) => response.arrayBuffer())
@@ -66,9 +71,12 @@ function useParcels(): any | undefined {
               ]),
           ),
       )
-      .then((parcels) => setParcels(parcels))
+      .then((parcels) => {
+        setParcels(parcels)
+        setLoading(false)
+      })
   }, [])
-  return parcels
+  return [loading, parcels]
 }
 
 export default App
