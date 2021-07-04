@@ -8,27 +8,45 @@ import RenderEngine from './RenderEngine'
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const renderEngine = useRef(new RenderEngine())
+  const renderEngineRef = useRef(new RenderEngine())
   const [loading, setLoading] = useState(true)
 
   useDrag({
     canvasRef,
-    onDelta: useCallback((delta) => renderEngine.current.pan(delta), []),
+    onDelta: useCallback(
+      (delta) => renderEngineRef.current.pan(delta),
+      [],
+    ),
   })
 
   useZoomByMouse({
     canvasRef,
-    onDelta: useCallback((delta) => renderEngine.current.zoom(delta), []),
+    onDelta: useCallback(
+      (delta) => renderEngineRef.current.zoom(delta),
+      [],
+    ),
   })
 
   useZoomByTouch({
     canvasRef,
-    onDelta: useCallback((delta) => renderEngine.current.zoom(delta), []),
+    onDelta: useCallback(
+      (delta) => renderEngineRef.current.zoom(delta),
+      [],
+    ),
   })
 
   useEffect(() => {
+    const renderEngine = renderEngineRef.current
+    const onResize = renderEngine.onResize.bind(renderEngine)
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+    }
+  }, [renderEngineRef])
+
+  useEffect(() => {
     fetchParcels().then((parcels: any) => {
-      renderEngine.current.setParcels(parcels)
+      renderEngineRef.current.setParcels(parcels)
       setLoading(false)
     })
   }, [])
@@ -36,7 +54,7 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (canvasRef.current) {
-        renderEngine.current.render(canvasRef.current!!)
+        renderEngineRef.current.render(canvasRef.current!!)
       }
     }, 1 / 30)
     return () => clearInterval(interval)

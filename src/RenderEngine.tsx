@@ -13,6 +13,9 @@ class RenderEngine {
     if (!this.hasUpdated) return
     this.hasUpdated = false
 
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
     const context = canvas.getContext('2d')!!
     context.fillStyle = '#000'
     context.rect(0, 0, canvas.width, canvas.height)
@@ -73,6 +76,10 @@ class RenderEngine {
 
   zoom(delta: number) {
     this.zoomValue += delta / 32
+    this.hasUpdated = true
+  }
+
+  onResize() {
     this.hasUpdated = true
   }
 }
