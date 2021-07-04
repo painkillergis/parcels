@@ -3,6 +3,19 @@ import getEnvelope from './service/getEnvelope'
 import { IndexedParcel, Vector2 } from './types'
 const RBush = require('rbush')
 
+const publicClassifications = [
+  'CEMETERY-PUBLIC NON-HOMESTEAD',
+  'COUNTY ADMINISTERED NON-HOMESTEAD',
+  'FEDERAL PROPERTY NON-HOMESTEAD',
+  'FOREST,PARK,WILDLIFE NON-HOMESTEAD',
+  'IN LIEU OF TAXES NON-HOMESTEAD',
+  'In Lieu of Taxes NON-HOMESTEAD',
+  'STATE ACQUIRED NON-HOMESTEAD',
+  'STATE ADMINISTERED NON-HOMESTEAD',
+  'STATE PROPERTY NON-HOMESTEAD',
+  'Tax Forfeit NON-HOMESTEAD',
+]
+
 class RenderEngine {
   center: Vector2 = { x: -94.87038174907313, y: 46.90248960427145 }
   zoomValue: number = 128
@@ -41,12 +54,21 @@ class RenderEngine {
           squareZoom,
           parcel.getPointsList(),
         )
+        context.fillStyle =
+          parcel
+            .getClassificationsList()
+            .filter((classification: string) =>
+              publicClassifications.includes(classification),
+            ).length > 0
+            ? '#AA4'
+            : '#000'
         context.moveTo(points[0].x, points[0].y)
         context.beginPath()
         points.slice(1, points.length).forEach(({ x, y }) => {
           context.lineTo(x, y)
         })
         context.closePath()
+        context.fill()
         context.stroke()
       })
   }

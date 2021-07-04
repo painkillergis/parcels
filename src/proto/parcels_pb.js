@@ -209,7 +209,7 @@ proto.Parcels.serializeBinaryToWriter = function(message, writer) {
  * @private {!Array<number>}
  * @const
  */
-proto.Parcels.Parcel.repeatedFields_ = [1];
+proto.Parcels.Parcel.repeatedFields_ = [1,2];
 
 
 
@@ -243,7 +243,8 @@ proto.Parcels.Parcel.prototype.toObject = function(opt_includeInstance) {
 proto.Parcels.Parcel.toObject = function(includeInstance, msg) {
   var f, obj = {
     pointsList: jspb.Message.toObjectList(msg.getPointsList(),
-    proto.Parcels.Parcel.LatLon.toObject, includeInstance)
+    proto.Parcels.Parcel.LatLon.toObject, includeInstance),
+    classificationsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -285,6 +286,10 @@ proto.Parcels.Parcel.deserializeBinaryFromReader = function(msg, reader) {
       reader.readMessage(value,proto.Parcels.Parcel.LatLon.deserializeBinaryFromReader);
       msg.addPoints(value);
       break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addClassifications(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -320,6 +325,13 @@ proto.Parcels.Parcel.serializeBinaryToWriter = function(message, writer) {
       1,
       f,
       proto.Parcels.Parcel.LatLon.serializeBinaryToWriter
+    );
+  }
+  f = message.getClassificationsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      2,
+      f
     );
   }
 };
@@ -556,6 +568,43 @@ proto.Parcels.Parcel.prototype.addPoints = function(opt_value, opt_index) {
  */
 proto.Parcels.Parcel.prototype.clearPointsList = function() {
   return this.setPointsList([]);
+};
+
+
+/**
+ * repeated string classifications = 2;
+ * @return {!Array<string>}
+ */
+proto.Parcels.Parcel.prototype.getClassificationsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 2));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.Parcels.Parcel} returns this
+ */
+proto.Parcels.Parcel.prototype.setClassificationsList = function(value) {
+  return jspb.Message.setField(this, 2, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.Parcels.Parcel} returns this
+ */
+proto.Parcels.Parcel.prototype.addClassifications = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.Parcels.Parcel} returns this
+ */
+proto.Parcels.Parcel.prototype.clearClassificationsList = function() {
+  return this.setClassificationsList([]);
 };
 
 

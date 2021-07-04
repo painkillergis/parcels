@@ -9,9 +9,10 @@ function newParcels(parcels) {
   return instance
 }
 
-function newParcel(points) {
+function newParcel(points, classifications) {
   const instance = new messages.Parcels.Parcel()
   instance.setPointsList(points)
+  instance.setClassificationsList(classifications)
   return instance
 }
 
@@ -31,6 +32,11 @@ const parcels = newParcels(
           polygon.map(([lon, lat]) => newLatLon(lat, lon)),
         ),
       ),
+      [
+        feature.properties.Class1,
+        feature.properties.Class2,
+        feature.properties.Class3,
+      ].filter((classification) => !!classification),
     ),
   ),
 )
