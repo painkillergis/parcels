@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Loading from './component/Loading'
 import fetchParcels from './fetch/fetchParcels'
 import useDrag from './hook/useDrag'
@@ -12,12 +12,12 @@ function App() {
 
   useDrag({
     canvasRef,
-    onDelta: (delta) => renderEngine.current.pan(delta),
+    onDelta: useCallback((delta) => renderEngine.current.pan(delta), []),
   })
 
   useZoom({
     canvasRef,
-    onDelta: (delta) => renderEngine.current.zoom(delta),
+    onDelta: useCallback((delta) => renderEngine.current.zoom(delta), []),
   })
 
   useEffect(() => {
