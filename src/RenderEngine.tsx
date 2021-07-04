@@ -67,6 +67,11 @@ class RenderEngine {
 
     this.hasUpdated = true
   }
+
+  zoom(delta: number) {
+    this.zoomValue += delta
+    this.hasUpdated = true
+  }
 }
 
 export default RenderEngine

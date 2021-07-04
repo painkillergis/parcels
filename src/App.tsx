@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Loading from './component/Loading'
 import fetchParcels from './fetch/fetchParcels'
 import useDrag from './hook/useDrag'
+import useZoom from './hook/useZoom'
 import RenderEngine from './RenderEngine'
 
 function App() {
@@ -12,6 +13,11 @@ function App() {
   useDrag({
     canvasRef,
     onDelta: (delta) => renderEngine.current.pan(delta),
+  })
+
+  useZoom({
+    canvasRef,
+    onDelta: (delta) => renderEngine.current.zoom(delta),
   })
 
   useEffect(() => {
