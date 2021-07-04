@@ -8,9 +8,9 @@ We should be able to easily find the Crow Wing River hidden campsite using this 
 
 ## Feature Queue
 
+1. Click to show parcel metadata for mobile
 1. Show current location
-1. Click to show parcel metadata
-1. Minimize parcel file size
+1. Reduce loading time
 1. Offline
 1. Offline OSM basemap
 

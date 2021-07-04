@@ -1,0 +1,14 @@
+.results {
+  margin: 0.5em;
+  padding: 0.25em;
+  position: fixed;
+  background-color: white;
+}
+
+.results > .result {
+  padding: 0.25em;
+}
+
+.results > .result:not(:last-child) {
+  border-bottom: 1px solid #aaa;
+}

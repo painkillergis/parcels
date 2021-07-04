@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Loading from './component/Loading'
+import Results from './component/Results'
 import fetchParcels from './fetch/fetchParcels'
 import useDrag from './hook/useDrag'
+import useResults from './hook/useResults'
 import useZoomByMouse from './hook/useZoomByMouse'
 import useZoomByTouch from './hook/useZoomByTouch'
 import RenderEngine from './RenderEngine'
@@ -10,6 +12,8 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const renderEngineRef = useRef(new RenderEngine())
   const [loading, setLoading] = useState(true)
+
+  const results = useResults({ canvasRef, renderEngineRef })
 
   useDrag({
     canvasRef,
@@ -63,10 +67,9 @@ function App() {
   return (
     <>
       <Loading loading={loading} />
+      <Results results={results} />
       <canvas
         ref={canvasRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
         style={{ width: '100%', height: '100%', display: 'block' }}
       />
     </>

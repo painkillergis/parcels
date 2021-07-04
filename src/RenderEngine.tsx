@@ -21,13 +21,15 @@ class RenderEngine {
   zoomValue: number = 128
   parcels: any = new RBush()
   hasUpdated: Boolean = false
+  width: number = window.innerWidth
+  height: number = window.innerHeight
 
   render(canvas: HTMLCanvasElement) {
     if (!this.hasUpdated) return
     this.hasUpdated = false
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    this.width = canvas.width = window.innerWidth
+    this.height = canvas.height = window.innerHeight
 
     const context = canvas.getContext('2d')!!
     context.fillStyle = '#000'
@@ -103,6 +105,26 @@ class RenderEngine {
 
   onResize() {
     this.hasUpdated = true
+  }
+
+  query(screenPosition: Vector2) {
+    const worldPosition: Vector2 = {
+      x:
+        (screenPosition.x - this.width / 2) / this.zoomValue ** 2 +
+        this.center.x,
+      y:
+        -(screenPosition.y - this.height / 2) / this.zoomValue ** 2 +
+        this.center.y,
+    }
+
+    return this.parcels
+      .search({
+        minX: worldPosition.x,
+        maxX: worldPosition.x,
+        minY: worldPosition.y,
+        maxY: worldPosition.y,
+      })
+      .map(({ parcel }: IndexedParcel) => parcel)
   }
 }
 
