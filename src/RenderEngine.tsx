@@ -5,7 +5,7 @@ const RBush = require('rbush')
 
 class RenderEngine {
   center: Vector2 = { x: -94.87038174907313, y: 46.90248960427145 }
-  zoomValue: number = 6000
+  zoomValue: number = 128
   parcels: any = new RBush()
   hasUpdated: Boolean = false
 
@@ -20,19 +20,22 @@ class RenderEngine {
 
     context.strokeStyle = '#FFF'
     context.lineWidth = 1
+
+    const squareZoom = this.zoomValue ** 2
+
     this.parcels
       .search({
-        minX: -canvas.width / 2 / this.zoomValue + this.center.x,
-        maxX: canvas.width / 2 / this.zoomValue + this.center.x,
-        minY: -canvas.height / 2 / this.zoomValue + this.center.y,
-        maxY: canvas.height / 2 / this.zoomValue + this.center.y,
+        minX: -canvas.width / 2 / squareZoom + this.center.x,
+        maxX: canvas.width / 2 / squareZoom + this.center.x,
+        minY: -canvas.height / 2 / squareZoom + this.center.y,
+        maxY: canvas.height / 2 / squareZoom + this.center.y,
       })
       .map(({ parcel }: IndexedParcel) => parcel)
       .map((points: any) =>
         toScreenCoordinates(
           { width: canvas.width, height: canvas.height },
           this.center,
-          this.zoomValue,
+          squareZoom,
           points,
         ),
       )
@@ -56,8 +59,8 @@ class RenderEngine {
 
   pan(screenDelta: Vector2) {
     const worldDelta = {
-      x: screenDelta.x / this.zoomValue,
-      y: screenDelta.y / this.zoomValue,
+      x: screenDelta.x / this.zoomValue ** 2,
+      y: screenDelta.y / this.zoomValue ** 2,
     }
 
     this.center = {
@@ -69,7 +72,7 @@ class RenderEngine {
   }
 
   zoom(delta: number) {
-    this.zoomValue += delta
+    this.zoomValue += delta / 32
     this.hasUpdated = true
   }
 }

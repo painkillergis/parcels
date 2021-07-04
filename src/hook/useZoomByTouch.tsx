@@ -38,7 +38,7 @@ function useZoomByTouch({ canvasRef, onDelta }: useZoomByTouchProps) {
         const lastDistance = Math.sqrt(
           (lastP1.x - lastP2.x) ** 2 + (lastP1.y - lastP2.y) ** 2,
         )
-        onDelta((distance - lastDistance) * 10)
+        onDelta((distance - lastDistance) * 6)
       }
       onTouchStart(e)
     }
