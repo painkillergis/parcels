@@ -7,18 +7,6 @@ function fetchParcels(): any | undefined {
     .then((arrayBuffer) =>
       Parcels.deserializeBinary(new Uint8Array(arrayBuffer)),
     )
-    .then((container) =>
-      container
-        .getParcelsList()
-        .map((parcel: any) =>
-          parcel
-            .getPointsList()
-            .map((point: any) => [
-              point.getLongitude(),
-              point.getLatitude(),
-            ]),
-        ),
-    )
 }
 
 export default fetchParcels

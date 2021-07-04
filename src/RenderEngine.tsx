@@ -34,18 +34,16 @@ class RenderEngine {
         maxY: canvas.height / 2 / squareZoom + this.center.y,
       })
       .map(({ parcel }: IndexedParcel) => parcel)
-      .map((points: any) =>
-        toScreenCoordinates(
+      .forEach((parcel: any) => {
+        const points = toScreenCoordinates(
           { width: canvas.width, height: canvas.height },
           this.center,
           squareZoom,
-          points,
-        ),
-      )
-      .forEach((points: any) => {
-        context.moveTo(points[0][0], points[0][1])
+          parcel.getPointsList(),
+        )
+        context.moveTo(points[0].x, points[0].y)
         context.beginPath()
-        points.slice(1, points.length).forEach(([x, y]: any) => {
+        points.slice(1, points.length).forEach(({ x, y }) => {
           context.lineTo(x, y)
         })
         context.closePath()
@@ -53,9 +51,11 @@ class RenderEngine {
       })
   }
 
-  setParcels(parcels: Array<Array<number>>) {
+  setParcels(container: any) {
     this.parcels.load(
-      parcels.map((parcel: any) => ({ ...getEnvelope(parcel), parcel })),
+      container
+        .getParcelsList()
+        .map((parcel: any) => ({ ...getEnvelope(parcel), parcel })),
     )
     this.hasUpdated = true
   }
