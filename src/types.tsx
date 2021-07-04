@@ -18,3 +18,8 @@ export interface Envelope {
 export interface IndexedParcel extends Envelope {
   parcel: any
 }
+
+export interface PagePosition {
+  pageX: number
+  pageY: number
+}
