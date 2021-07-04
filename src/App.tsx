@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Loading from './component/Loading'
 import fetchParcels from './fetch/fetchParcels'
 import useDrag from './hook/useDrag'
-import useZoom from './hook/useZoom'
+import useZoomByMouse from './hook/useZoomByMouse'
+import useZoomByTouch from './hook/useZoomByTouch'
 import RenderEngine from './RenderEngine'
 
 function App() {
@@ -15,7 +16,12 @@ function App() {
     onDelta: useCallback((delta) => renderEngine.current.pan(delta), []),
   })
 
-  useZoom({
+  useZoomByMouse({
+    canvasRef,
+    onDelta: useCallback((delta) => renderEngine.current.zoom(delta), []),
+  })
+
+  useZoomByTouch({
     canvasRef,
     onDelta: useCallback((delta) => renderEngine.current.zoom(delta), []),
   })

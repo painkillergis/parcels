@@ -1,11 +1,11 @@
 import { RefObject, useEffect } from 'react'
 
-interface useZoomProps {
+interface useZoomByMouseProps {
   canvasRef: RefObject<HTMLCanvasElement>
   onDelta: (delta: number) => void
 }
 
-function useZoom({ canvasRef, onDelta }: useZoomProps) {
+function useZoomByMouse({ canvasRef, onDelta }: useZoomByMouseProps) {
   useEffect(() => {
     if (!canvasRef.current) return
     const canvas = canvasRef.current!!
@@ -22,4 +22,4 @@ function useZoom({ canvasRef, onDelta }: useZoomProps) {
   }, [canvasRef, onDelta])
 }
 
-export default useZoom
+export default useZoomByMouse

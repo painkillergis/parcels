@@ -8,7 +8,7 @@ We should be able to easily find the Crow Wing River hidden campsite using this 
 
 ## Feature Queue
 
-1. Mobile zoom
+1. Screen resize
 1. Zoom curving
 1. Symbolize public vs private
 1. Show current location
