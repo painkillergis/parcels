@@ -8,7 +8,6 @@ We should be able to easily find the Crow Wing River hidden campsite using this 
 
 ## Feature Queue
 
-1. Remove dependency on old Parcel.Points
 1. Fix content encoding issue when opening in Snapchat
 1. Show metadata for only parcels that intersect with query (not including parcels that have intersecting /envelopes/)
 1. Show current location

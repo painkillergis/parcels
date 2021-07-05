@@ -9,9 +9,8 @@ function newParcels(parcels) {
   return instance
 }
 
-function newParcel(points, classifications, polygons) {
+function newParcel(classifications, polygons) {
   const instance = new messages.Parcels.Parcel()
-  instance.setPointsList(points)
   instance.setClassificationsList(classifications)
   instance.setPolygonsList(polygons)
   return instance
@@ -24,7 +23,7 @@ function newPolygon(points) {
 }
 
 function newLatLon(latitude, longitude) {
-  const instance = new messages.Parcels.Parcel.LatLon()
+  const instance = new messages.Parcels.Parcel.Polygon.LatLon()
   instance.setLatitude(latitude)
   instance.setLongitude(longitude)
   return instance
@@ -34,11 +33,6 @@ const featureCollection = JSON.parse(fs.readFileSync('/dev/stdin'))
 const parcels = newParcels(
   featureCollection.features.map((feature) =>
     newParcel(
-      feature.geometry.coordinates.flatMap((polygons) =>
-        polygons.flatMap((polygon) =>
-          polygon.map(([lon, lat]) => newLatLon(lat, lon)),
-        ),
-      ),
       [
         feature.properties.Class1,
         feature.properties.Class2,
