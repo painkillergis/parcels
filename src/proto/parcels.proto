@@ -6,6 +6,10 @@ message Parcels {
     }
     repeated LatLon points = 1;
     repeated string classifications = 2;
+    message Polygon {
+      repeated LatLon points = 1;
+    }
+    repeated Polygon polygons = 3;
   }
   repeated Parcel parcels = 1;
 }
