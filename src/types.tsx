@@ -16,10 +16,24 @@ export interface Envelope {
 }
 
 export interface IndexedParcel extends Envelope {
-  parcel: any
+  parcel: Parcel
 }
 
 export interface PagePosition {
   pageX: number
   pageY: number
+}
+
+export interface Container {
+  parcels: Array<Parcel>
+}
+
+export interface Parcel {
+  points: Array<LatLon>
+  classifications: Array<string>
+}
+
+export interface LatLon {
+  latitude: number
+  longitude: number
 }

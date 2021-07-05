@@ -1,6 +1,6 @@
 import { toScreenCoordinates } from './service/CoordinateTransformations'
 import getEnvelope from './service/getEnvelope'
-import { IndexedParcel, Vector2 } from './types'
+import { Container, IndexedParcel, Vector2 } from './types'
 const RBush = require('rbush')
 
 const publicClassifications = [
@@ -48,20 +48,17 @@ class RenderEngine {
         minY: -canvas.height / 2 / squareZoom + this.center.y,
         maxY: canvas.height / 2 / squareZoom + this.center.y,
       })
-      .map(({ parcel }: IndexedParcel) => parcel)
-      .forEach((parcel: any) => {
+      .forEach(({ parcel }: IndexedParcel) => {
         const points = toScreenCoordinates(
           { width: canvas.width, height: canvas.height },
           this.center,
           squareZoom,
-          parcel.getPointsList(),
+          parcel.points,
         )
         context.fillStyle =
-          parcel
-            .getClassificationsList()
-            .filter((classification: string) =>
-              publicClassifications.includes(classification),
-            ).length > 0
+          parcel.classifications.filter((classification: string) =>
+            publicClassifications.includes(classification),
+          ).length > 0
             ? '#AA4'
             : '#000'
         context.moveTo(points[0].x, points[0].y)
@@ -75,11 +72,12 @@ class RenderEngine {
       })
   }
 
-  setParcels(container: any) {
+  setParcels(container: Container) {
     this.parcels.load(
-      container
-        .getParcelsList()
-        .map((parcel: any) => ({ ...getEnvelope(parcel), parcel })),
+      container.parcels.map((parcel) => ({
+        ...getEnvelope(parcel),
+        parcel,
+      })),
     )
     this.hasUpdated = true
   }

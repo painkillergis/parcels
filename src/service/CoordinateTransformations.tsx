@@ -1,13 +1,13 @@
-import { Box, Vector2 } from '../types'
+import { Box, LatLon, Vector2 } from '../types'
 
 export function toScreenCoordinates(
   screenSize: Box,
   center: Vector2,
   zoom: number,
-  pointsList: Array<any>,
+  points: Array<LatLon>,
 ): Array<Vector2> {
-  return pointsList.map((point) => ({
-    x: (point.getLongitude() - center.x) * zoom + screenSize.width / 2,
-    y: (-point.getLatitude() + center.y) * zoom + screenSize.height / 2,
+  return points.map(({ latitude, longitude }) => ({
+    x: (longitude - center.x) * zoom + screenSize.width / 2,
+    y: (-latitude + center.y) * zoom + screenSize.height / 2,
   }))
 }

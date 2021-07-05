@@ -9,7 +9,7 @@ function Results({ results }: ResultsProps) {
     <div className="results">
       {results.map((result: any, index: number) => (
         <div className="result" key={index}>
-          {result.getClassificationsList().join(', ')}
+          {result.classifications.join(', ')}
         </div>
       ))}
     </div>
