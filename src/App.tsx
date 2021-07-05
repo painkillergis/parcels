@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Loading from './component/Loading'
 import Results from './component/Results'
-import fetchParcels from './fetch/fetchParcels'
+import fetchParcels from './service/fetchParcels'
 import useDrag from './hook/useDrag'
 import useResults from './hook/useResults'
 import useZoomByMouse from './hook/useZoomByMouse'
