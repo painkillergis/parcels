@@ -20,8 +20,8 @@ const publicClassifications = [
 ]
 
 class RenderEngine {
-  center: Vector2 = { x: -94.87038174907313, y: 46.90248960427145 }
-  zoomValue: number = 128
+  center: Vector2 = { x: 357196.7, y: 5196129.9 }
+  zoomValue: number = 4096
   parcels: any = new RBush()
   hasUpdated: Boolean = false
   width: number = window.innerWidth
@@ -42,14 +42,14 @@ class RenderEngine {
     context.strokeStyle = '#FFF'
     context.lineWidth = 1
 
-    const squareZoom = this.zoomValue ** 2
+    const curvedZoom = this.getCurvedZoom()
 
     this.parcels
       .search({
-        minX: -canvas.width / 2 / squareZoom + this.center.x,
-        maxX: canvas.width / 2 / squareZoom + this.center.x,
-        minY: -canvas.height / 2 / squareZoom + this.center.y,
-        maxY: canvas.height / 2 / squareZoom + this.center.y,
+        minX: -canvas.width / 2 / curvedZoom + this.center.x,
+        maxX: canvas.width / 2 / curvedZoom + this.center.x,
+        minY: -canvas.height / 2 / curvedZoom + this.center.y,
+        maxY: canvas.height / 2 / curvedZoom + this.center.y,
       })
       .map(({ parcel }: IndexedParcel) => ({
         ...parcel,
@@ -57,7 +57,7 @@ class RenderEngine {
           points: toScreenCoordinates(
             { width: canvas.width, height: canvas.height },
             this.center,
-            squareZoom,
+            curvedZoom,
             polygon.points,
           ),
         })),
@@ -94,8 +94,8 @@ class RenderEngine {
 
   pan(screenDelta: Vector2) {
     const worldDelta = {
-      x: screenDelta.x / this.zoomValue ** 2,
-      y: screenDelta.y / this.zoomValue ** 2,
+      x: screenDelta.x / this.getCurvedZoom(),
+      y: screenDelta.y / this.getCurvedZoom(),
     }
 
     this.center = {
@@ -107,8 +107,12 @@ class RenderEngine {
   }
 
   zoom(delta: number) {
-    this.zoomValue += delta / 32
+    this.zoomValue += delta
     this.hasUpdated = true
+  }
+
+  getCurvedZoom() {
+    return (this.zoomValue / 8192) ** 2
   }
 
   onResize() {
@@ -118,10 +122,10 @@ class RenderEngine {
   query(screenPosition: Vector2) {
     const worldPosition: Vector2 = {
       x:
-        (screenPosition.x - this.width / 2) / this.zoomValue ** 2 +
+        (screenPosition.x - this.width / 2) / this.getCurvedZoom() +
         this.center.x,
       y:
-        -(screenPosition.y - this.height / 2) / this.zoomValue ** 2 +
+        -(screenPosition.y - this.height / 2) / this.getCurvedZoom() +
         this.center.y,
     }
 

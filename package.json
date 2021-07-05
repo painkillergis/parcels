@@ -24,7 +24,7 @@
     "sync": "scripts/aws:s3/sync",
     "invalidate": "scripts/aws:cloudfront/invalidate",
     "proto": "protoc src/proto/*.proto --js_out=import_style=commonjs,binary:.",
-    "geojson2proto": "node scripts/geojson2proto.js < src/layer/parcels.geojson > public/parcels.v4.pbf"
+    "geojson2proto": "node scripts/geojson2proto.js < src/layer/parcels.geojson > public/parcels.v5.pbf"
   },
   "eslintConfig": {
     "extends": [

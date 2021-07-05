@@ -15,7 +15,3 @@ We should be able to easily find the Crow Wing River hidden campsite using this 
 1. Reduce loading time
 1. Offline
 1. Offline OSM basemap
-
-## Parking Lot
-
-1. Consider a projection like tranverse mercator or lambert conic conformal [per MNDOT](https://www.dot.state.mn.us/surveying/pdf/mncoordsys.pdf)

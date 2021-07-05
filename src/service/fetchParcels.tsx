@@ -3,7 +3,7 @@ import { Container } from '../types'
 const { Parcels } = require('../proto/parcels_pb')
 
 function fetchParcels(): Promise<Container> {
-  return fetch('/parcels.v4.pbf')
+  return fetch('/parcels.v5.pbf')
     .then((response) => response.arrayBuffer())
     .then((arrayBuffer) => {
       const containerPbf = Parcels.deserializeBinary(
