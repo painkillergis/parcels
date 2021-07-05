@@ -9,7 +9,6 @@ We should be able to easily find the Crow Wing River hidden campsite using this 
 ## Feature Queue
 
 1. Fix parcels with holes
-1. Fix content encoding issue when opening in Snapchat
 1. Show current location
 1. Symbolize selected parcels
 1. Reduce loading time

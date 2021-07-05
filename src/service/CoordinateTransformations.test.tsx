@@ -1,4 +1,3 @@
-import { newLatLon } from '../proto/parcels'
 import { toScreenCoordinates } from './CoordinateTransformations'
 
 test('offset by center', () => {
@@ -7,23 +6,23 @@ test('offset by center', () => {
       { width: 0, height: 0 },
       { x: -94.87038174907313, y: 46.90248960427145 },
       1,
-      [newLatLon(46.90248960427145, -94.87038174907313)],
+      [[-94.87038174907313, 46.90248960427145]],
     ),
-  ).toStrictEqual([newLatLon(0, 0)])
+  ).toStrictEqual([[0, 0]])
 })
 
 test('offset by half of screen size', () => {
   expect(
     toScreenCoordinates({ width: 500, height: 1000 }, { x: 0, y: 0 }, 1, [
-      newLatLon(0, 0),
+      [0, 0],
     ]),
-  ).toStrictEqual([newLatLon(500, 250)])
+  ).toStrictEqual([[250, 500]])
 })
 
 test('zoom', () => {
   expect(
     toScreenCoordinates({ width: 0, height: 0 }, { x: 0, y: 0 }, 250, [
-      newLatLon(-1, 1),
+      [1, -1],
     ]),
-  ).toStrictEqual([newLatLon(250, 250)])
+  ).toStrictEqual([[250, 250]])
 })

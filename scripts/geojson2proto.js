@@ -1,11 +1,27 @@
 require('google-protobuf')
+const messages = require('../src/proto/parcels_pb')
 
-const {
-  newParcels,
-  newParcel,
-  newLatLon,
-} = require('../src/proto/parcels')
 const fs = require('fs')
+
+function newParcels(parcels) {
+  const instance = new messages.Parcels()
+  instance.setParcelsList(parcels)
+  return instance
+}
+
+function newParcel(points, classifications) {
+  const instance = new messages.Parcels.Parcel()
+  instance.setPointsList(points)
+  instance.setClassificationsList(classifications)
+  return instance
+}
+
+function newLatLon(latitude, longitude) {
+  const instance = new messages.Parcels.Parcel.LatLon()
+  instance.setLatitude(latitude)
+  instance.setLongitude(longitude)
+  return instance
+}
 
 const featureCollection = JSON.parse(fs.readFileSync('/dev/stdin'))
 const parcels = newParcels(

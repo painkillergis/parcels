@@ -64,10 +64,10 @@ class RenderEngine {
             ).length > 0
             ? '#AA4'
             : '#000'
-        context.moveTo(points[0].getLongitude(), points[0].getLatitude())
+        context.moveTo(points[0].x, points[0].y)
         context.beginPath()
-        points.slice(1, points.length).forEach((point) => {
-          context.lineTo(point.getLongitude(), point.getLatitude())
+        points.slice(1, points.length).forEach(({ x, y }) => {
+          context.lineTo(x, y)
         })
         context.closePath()
         context.fill()
