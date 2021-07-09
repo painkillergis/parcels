@@ -1,11 +1,6 @@
 import { toScreenCoordinates } from './service/CoordinateTransformations'
 import getEnvelope from './service/getEnvelope'
-import {
-  Container,
-  IndexedParcel,
-  ProjectedParcel,
-  Vector2,
-} from './types'
+import { Container, IndexedParcel, Parcel, Vector2 } from './types'
 const RBush = require('rbush')
 
 const publicClassifications = [
@@ -62,7 +57,7 @@ class RenderEngine {
           ),
         })),
       }))
-      .forEach(({ classifications, polygons }: ProjectedParcel) => {
+      .forEach(({ classifications, polygons }: Parcel) => {
         context.fillStyle =
           classifications.filter((classification: string) =>
             publicClassifications.includes(classification),
