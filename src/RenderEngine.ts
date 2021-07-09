@@ -1,6 +1,7 @@
 import { toScreenCoordinates } from './service/CoordinateTransformations'
 import getEnvelope from './service/getEnvelope'
 import { Container, IndexedParcel, Parcel, Vector2 } from './types'
+import { polygonContains } from 'd3-polygon'
 const RBush = require('rbush')
 
 const publicClassifications = [
@@ -46,7 +47,8 @@ class RenderEngine {
         minY: -canvas.height / 2 / curvedZoom + this.center.y,
         maxY: canvas.height / 2 / curvedZoom + this.center.y,
       })
-      .map(({ parcel }: IndexedParcel) => ({
+      .map(({ parcel }: IndexedParcel) => parcel)
+      .map((parcel: Parcel) => ({
         ...parcel,
         polygons: parcel.polygons.map((polygon) => ({
           points: toScreenCoordinates(
@@ -132,6 +134,12 @@ class RenderEngine {
         maxY: worldPosition.y,
       })
       .map(({ parcel }: IndexedParcel) => parcel)
+      .filter((parcel: Parcel) =>
+        polygonContains(
+          parcel.polygons[0].points.map(({ x, y }) => [x, y]),
+          [worldPosition.x, worldPosition.y],
+        ),
+      )
   }
 }
 
